@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+    <mat-form-field [style.width.%]="100">
+        <input matInput placeholder="{{placeholder}}" [matAutocomplete]="auto" name="auto-complete" required="{{isRequired}}" [formControl]="autoFormControl">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="autoCompleteDisplay">
+            <mat-option *ngFor="let row of dataList" [value]="row">
+                {{row.displayText}}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+    <button *ngIf="showRemove" mat-icon-button color="primary"  style="margin-left:10px;" (click)="onClickRemoveValue()">
+        <mat-icon style="color:red;">highlight_off</mat-icon>
+    </button>
+</div>

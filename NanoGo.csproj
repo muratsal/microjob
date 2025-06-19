@@ -1,0 +1,121 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Views\Bishie Dashboard\**" />
+	  <Compile Remove="wwwroot\bishieAsset\**" />
+	  <Content Remove="Views\Bishie Dashboard\**" />
+	  <Content Remove="wwwroot\bishieAsset\**" />
+	  <EmbeddedResource Remove="Views\Bishie Dashboard\**" />
+	  <EmbeddedResource Remove="wwwroot\bishieAsset\**" />
+	  <None Remove="Views\Bishie Dashboard\**" />
+	  <None Remove="wwwroot\bishieAsset\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="wwwroot\AppImages\Product\6e952e70-a34f-4984-9d59-9f6eb81d849a.jpg" />
+	  <Content Remove="wwwroot\AppImages\Product\d44a7a72-945d-4328-84ba-5af6b70929d8.jpg" />
+	  <Content Remove="wwwroot\AppImages\Product\ed53b8bf-20e4-4bea-951f-75c2c5237d6f.jpg" />
+	  <Content Remove="wwwroot\AppImages\Product\f681bb08-16f4-4068-acae-3aa23e7b1dee.jpg" />
+	  <Content Remove="wwwroot\AppImages\Product\Thumbnail\ed53b8bf-20e4-4bea-951f-75c2c5237d6f.jpg" />
+	  <Content Remove="wwwroot\AppImages\Product\Thumbnail\f681bb08-16f4-4068-acae-3aa23e7b1dee.jpg" />
+	  <Content Remove="wwwroot\app\src\app\debouncer-helper.service.ts.ts" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="AppTemplates\AngularTemplates\FE_Component_Html.txt" />
+	  <None Remove="AppTemplates\AngularTemplates\FE_Component_Scss.txt" />
+	  <None Remove="AppTemplates\AngularTemplates\FE_Component_Ts.txt" />
+	  <None Remove="AppTemplates\AngularTemplates\FE_Dialog_Component_Html.txt" />
+	  <None Remove="AppTemplates\AngularTemplates\FE_Dialog_Component_Ts.txt" />
+	  <None Remove="AppTemplates\AngularTemplates\FE_Service_Ts.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="wwwroot\AppImages\Product\Thumbnail\ed53b8bf-20e4-4bea-951f-75c2c5237d6f.jpg" />
+	  <_ContentIncludedByDefault Remove="wwwroot\AppImages\Product\Thumbnail\f681bb08-16f4-4068-acae-3aa23e7b1dee.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Dialog_Component_Html.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Dialog_Component_Ts.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Component_Html.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Component_Scss.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Component_Ts.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="AppTemplates\AngularTemplates\FE_Service_Ts.txt">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Codaxy.WkHtmlToPdf" Version="0.5.8" />
+		<PackageReference Include="EPPlus" Version="4.5.3.3" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.60.0" />
+		<PackageReference Include="MailKit" Version="4.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.15" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+		<PackageReference Include="MimeKit" Version="4.0.0" />
+		<PackageReference Include="Syncfusion.DocIO.Net.Core" Version="19.3.0.43" />
+		<PackageReference Include="Syncfusion.HtmlToPdfConverter.QtWebKit.Net.Core" Version="19.3.0.43" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+		<PackageReference Include="System.IO" Version="4.3.0" />
+		<PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Controllers\Inventory\" />
+	  <Folder Include="Controllers\Permission\" />
+	  <Folder Include="Files\EmailAttachments\" />
+	  <Folder Include="Jobs\NewFolder\" />
+	  <Folder Include="SchemaScripts\3-Functions\" />
+	  <Folder Include="Services\Inventory\" />
+	  <Folder Include="Services\Permission\" />
+	  <Folder Include="wwwroot\img\" />
+	  <Folder Include="wwwroot\vacancies\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\AppImages\Product\6e952e70-a34f-4984-9d59-9f6eb81d849a.jpg" />
+	  <None Include="wwwroot\AppImages\Product\d44a7a72-945d-4328-84ba-5af6b70929d8.jpg" />
+	  <None Include="wwwroot\AppImages\Product\ed53b8bf-20e4-4bea-951f-75c2c5237d6f.jpg" />
+	  <None Include="wwwroot\AppImages\Product\f681bb08-16f4-4068-acae-3aa23e7b1dee.jpg" />
+	  <None Include="wwwroot\AppImages\Product\Thumbnail\ed53b8bf-20e4-4bea-951f-75c2c5237d6f.jpg" />
+	  <None Include="wwwroot\AppImages\Product\Thumbnail\f681bb08-16f4-4068-acae-3aa23e7b1dee.jpg" />
+	  <None Include="wwwroot\app\src\app\views\System\Log\log.component.scss" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <TypeScriptCompile Include="wwwroot\app\src\app\debouncer-helper.service.ts.ts" />
+	  <TypeScriptCompile Include="wwwroot\app\src\app\views\System\Log\log-dialog.component.ts" />
+	  <TypeScriptCompile Include="wwwroot\app\src\app\views\System\Log\log.component.ts" />
+	  <TypeScriptCompile Include="wwwroot\app\src\app\views\System\Log\log.service.ts" />
+	</ItemGroup>
+
+</Project>

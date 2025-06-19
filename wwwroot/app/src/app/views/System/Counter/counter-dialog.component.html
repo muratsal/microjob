@@ -1,0 +1,68 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'COUNTER.COUNTER' | translate}}  - {{row.counterId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'COUNTER.COUNTER' | translate}} - {{row.counterId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+    <mat-label>{{ 'COUNTER.COUNTERNAME' | translate }}</mat-label>
+   <input type="text" matInput [(ngModel)]="row.counterName"> 
+</mat-form-field>
+<mat-form-field [style.width.%]="100" appearance="legacy">
+    <mat-label>{{ 'COUNTER.CURRENTVALUE' | translate }}</mat-label>
+   <input type="number" matInput [(ngModel)]="row.currentValue"> 
+</mat-form-field>
+<mat-form-field [style.width.%]="100" appearance="legacy">
+    <mat-label>{{ 'COUNTER.PREFIX' | translate }}</mat-label>
+   <input type="text" matInput [(ngModel)]="row.prefix"> 
+</mat-form-field>
+<mat-form-field [style.width.%]="100" appearance="legacy">
+   <mat-slide-toggle [(ngModel)]="row.addYear"> </mat-slide-toggle>
+   <span style="margin-left:10px;">{{ 'COUNTER.ADDYEAR' | translate }}</span>
+   <textarea matInput style="display:none;"></textarea>
+</mat-form-field>
+<mat-form-field [style.width.%]="100" appearance="legacy">
+    <mat-label>{{ 'COUNTER.PADDINGCOUNT' | translate }}</mat-label>
+   <input type="number" matInput [(ngModel)]="row.paddingCount"> 
+</mat-form-field>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.createdUserText" readonly>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.updatedUserText" readonly>
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

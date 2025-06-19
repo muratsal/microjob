@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            min-width: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #D5E2EC !important;
+        }
+
+        body, table, td, div, p, a {
+            -webkit-font-smoothing: antialiased;
+            text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+            line-height: 100%;
+        }
+
+        table, td {
+            border-collapse: collapse !important;
+        }
+
+        img {
+            border: 0;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+            margin-top: 20px;
+            height: 90px;
+        }
+
+        #outlook a {
+            padding: 0;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                line-height: 100%;
+            }
+
+        @media all and (min-width: 560px) {
+            .container {
+                border-radius: 8px;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                -khtml-border-radius: 8px;
+            }
+        }
+
+        a, a:hover {
+            color: #127DB3;
+        }
+
+        .footer a, .footer a:hover {
+            color: #999999;
+        }
+
+        tr {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 160%;
+            border-collapse: collapse;
+            text-align: left;
+            padding-top: 30px;
+            color: #303344;
+            font-family: 'Arial', sans-serif;
+            ;
+        }
+    </style>
+
+    <title>DDLOGI</title>
+
+</head>
+
+
+<body>
+
+    <table align="center" style=" margin-top: 5% !important; width: inherit; max-width: 700px; background-color:#FFFFFF; border-radius: 8px;">
+        <tr>
+            <td style="text-align: center; background-color: #40826d; padding">
+                <img src="https://cdn11.bigcommerce.com/s-wepv6/images/stencil/250x100/logo_alma_yzeyi_12_1681806609__75094.original.png" />
+                </td>
+        </tr>
+        <tr>
+            <td style="padding: 8% 8% 0% 8%; line-height: 130%;">
+                Merhaba,
+                <br /><br />
+                Aşağıdaki bilgilere sahip personelin izin talebi bulunmaktadır.
+                <br /><br />
+                Onay için lütfen sistem girişi yapınız.
+                <br /><br />
+
+                <div style="padding:30px;">
+
+                    İsim-Soyisim : @NAMESURNAME@<br /><br />
+
+                    İzin Tipi : @PERMISSIONTYPE@<br /><br />
+
+                    İzin Açıklama: @DESCRIPTION@<br /><br />
+
+                    Başlangıç Tarihi : @STARTDATE@<br /><br />
+
+                    Bitiş Tarihi : @ENDDATE@<br /><br />
+
+                    Gün Sayısı: @DAYCOUNT@<br /><br />
+                </div>
+
+            </td>
+        </tr>
+
+    </table>
+</body>
+</html>

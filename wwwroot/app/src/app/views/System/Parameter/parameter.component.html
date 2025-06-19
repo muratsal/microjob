@@ -1,0 +1,169 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true">
+    <mat-sidenav-content style="min-height: 80vh; margin-top: -8px;">
+        <div class="ml-8 mr-8 mt-8 pb-16">
+
+            <div class="biruni-action-toolbar">
+
+                <button mat-icon-button color="primary" (click)="newItemDialog()" style="margin-left:10px;">
+                    <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="downloadData()" style="margin-left:10px;">
+                    <mat-icon>download</mat-icon>
+                </button>
+
+                <!--<button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>upload</mat-icon>
+                </button>-->
+            </div>
+
+            <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                    <ng-container matColumnDef="Actions">
+                        <mat-header-cell *matHeaderCellDef> {{'GENERAL.ACTIONS' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                <mat-icon aria-label="Edit">edit</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                <mat-icon aria-label="Delete">delete</mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="paramId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.PARAMID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ParamId"> {{row.paramId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="paramType">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.PARAMTYPE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ParamType"> {{'PARAMETER.PARAMETERTYPE_'+row.paramType | translate}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="paramCode">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.PARAMCODE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ParamCode"> {{row.paramCode}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="paramDesc">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.PARAMDESC' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ParamDesc"> {{row.paramDesc}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="parentId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.PARENTID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ParentId"> {{row.parentId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="freeText1">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.FREETEXT1' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="FreeText1"> {{row.freeText1}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="freeText2">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.FREETEXT2' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="FreeText2"> {{row.freeText2}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="freeText3">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.FREETEXT3' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="FreeText3"> {{row.freeText3}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.UPDATEDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedDate"> {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedUser">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PARAMETER.UPDATEDUSER' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUser}}</mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="updatedUserText">
+                        <mat-header-cell *matHeaderCellDef> {{'PARAMETER.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                               [pageSize]="this.queryInfo.pager.pageSize"
+                               (page)="pageEvent=$event; onPaginateChange($event)"
+                               [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+            </div>
+            <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+        </div>
+    </mat-sidenav-content>
+
+    <mat-sidenav #sidenav mode="over"
+                 class="biruni-filter-sidebar" position="end">
+
+        <div style="margin-bottom:10px;">
+            <button mat-raised-button color="primary" (click)="filterData()" [style.width.%]="45" style="margin-right:10px;">{{'GENERAL.FILTER' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="clearFilter()" [style.width.%]="45">{{'GENERAL.CLEARFILTER' | translate}}</button>
+        </div>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.PARAMID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.paramId">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.PARAMTYPE'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.paramType">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.PARAMCODE'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.paramCode">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.PARAMDESC'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.paramDesc">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.PARENTID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.parentId">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.FREETEXT1'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.freeText1">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.FREETEXT2'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.freeText2">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.FREETEXT3'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.freeText3">
+        </mat-form-field>
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PARAMETER.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDatepicker" [(ngModel)]="filter.createdDate">
+                <mat-datepicker-toggle matSuffix [for]="createdDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PARAMETER.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDate2picker" [(ngModel)]="filter.createdDate2">
+                <mat-datepicker-toggle matSuffix [for]="createdDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PARAMETER.CREATEDUSER'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.createdUser">
+        </mat-form-field>
+
+
+    </mat-sidenav>
+</mat-sidenav-container>

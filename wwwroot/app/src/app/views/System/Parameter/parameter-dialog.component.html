@@ -1,0 +1,80 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'PARAMETER.PARAMETER' | translate}}  - {{row.paramId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'PARAMETER.PARAMETER' | translate}} - {{row.paramId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.PARAMTYPE' | translate }}</mat-label>
+        <!--<input type="number" matInput [(ngModel)]="row.paramType">-->
+        <mat-select matInput [(ngModel)]="row.paramType">
+            <mat-option *ngFor="let paramType of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]" [value]="paramType">
+                {{'PARAMETER.PARAMETERTYPE_' + paramType | translate}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.PARAMCODE' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.paramCode">
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.PARAMDESC' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.paramDesc">
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.PARENTID' | translate }}</mat-label>
+        <input type="number" matInput [(ngModel)]="row.parentId">
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.FREETEXT1' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.freeText1">
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.FREETEXT2' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.freeText2">
+    </mat-form-field>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'PARAMETER.FREETEXT3' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.freeText3">
+    </mat-form-field>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.createdUserText" readonly>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.updatedUserText" readonly>
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

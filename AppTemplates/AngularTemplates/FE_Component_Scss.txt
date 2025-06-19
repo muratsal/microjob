@@ -1,0 +1,24 @@
+/*mat-row, mat-footer-row {
+    min-height: 40px;
+}
+
+.mat-cell, .mat-footer-cell {
+    font-size: 13px;
+}
+
+.mat-cell[_ngcontent-xkp-c404], .mat-footer-cell[_ngcontent-xkp-c404] {
+    font-size: 13px;
+}
+
+.biruni-action-toolbar {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 10px;
+    z-index: 99;
+}
+
+.biruni-filter-sidebar {
+    width: 300px;
+    padding: 15px;
+}
+*/

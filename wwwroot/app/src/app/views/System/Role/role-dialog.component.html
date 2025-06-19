@@ -1,0 +1,80 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'ROLE.ROLE' | translate}}  - {{row.roleId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'ROLE.ROLE' | translate}} - {{row.roleId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-tab-group animationDuration="0ms">
+        <mat-tab label="{{'ROLE.ROLETAB' | translate}}">
+            <mat-card>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'ROLE.ROLENAME' | translate }}</mat-label>
+                    <input type="text" matInput [(ngModel)]="row.roleName">
+                </mat-form-field>
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'ROLE.ROLEDESC' | translate }}</mat-label>
+                    <input type="text" matInput [(ngModel)]="row.roleDesc">
+                </mat-form-field>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.createdUserText" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.updatedUserText" readonly>
+                    </mat-form-field>
+
+                </div>
+                </mat-card>
+        </mat-tab>
+
+        <mat-tab label="{{'ROLE.ROLEAUTHTAB' | translate}}">
+
+            <mat-form-field fxFlex appearance="legacy" style="margin-bottom:0px; margin-left:20px; margin-top:10px;">
+                <mat-label>{{ 'GENERAL.FILTERLIST' | translate }}</mat-label>
+                <input matInput [(ngModel)]="this.filterAuth">
+            </mat-form-field>
+            <mat-card>
+                <mat-selection-list>
+                    <mat-list-option *ngFor="let row of this.getFilteredAuths()" (click)="onRoleAuthClick($event,row)" [value]="row.authId" [selected]="row.isRoleAuth">
+                        {{row.authCode}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </mat-card>
+
+        </mat-tab>
+
+    </mat-tab-group>
+
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()" *ngIf="this.isDataLoaded ==true" >{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

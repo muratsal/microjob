@@ -1,0 +1,337 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true" *ngIf="!!headerData">
+    <mat-sidenav-content style="min-height: 80vh; margin-top: -8px;">
+        <div class="ml-8 mr-8 mt-8 pb-16">
+            <mat-card>
+                <div style="padding:20px 10px  0px 10px;">
+
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROL.CUSTOMERID' | translate }}" [initValue]="headerData.customerId" [endpoint]="'/Customer/GetListForCombo'" (onChange)="onChange($event,headerData,'customerId')"></fast-autocomplete>
+
+                        <mat-form-field [style.width.%]="100" appearance="legacy">
+                            <mat-label>{{ 'QUALITYCONTROL.STATUS' | translate }}</mat-label>
+                            <mat-select [(ngModel)]="headerData.status" required>
+                                <mat-option [value]="1">
+                                    {{'QUALITYCONTROL.STATUS_1' | translate}}
+                                </mat-option>
+                                <mat-option [value]="2">
+                                    {{'QUALITYCONTROL.STATUS_2' | translate}}
+                                </mat-option>
+                                <mat-option [value]="3">
+                                    {{'QUALITYCONTROL.STATUS_3' | translate}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                    </div>
+
+
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field [style.width.%]="100" appearance="legacy">
+                            <mat-label>{{ 'QUALITYCONTROL.DESCRIPTION' | translate }}</mat-label>
+                            <input type="text" matInput [(ngModel)]="headerData.description">
+                        </mat-form-field>
+
+                        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROL.ASSIGNEE' | translate }}" [initValue]="headerData.assignee" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,headerData,'assignee')" [isRequired]="false"></fast-autocomplete>
+
+                    </div>
+
+                    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field fxFlex appearance="legacy">
+                            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+                            <input matInput value="{{headerData.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex appearance="legacy">
+                            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+                            <input matInput [(ngModel)]="headerData.createdUserText" readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                        <mat-form-field fxFlex appearance="legacy">
+                            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+                            <input matInput value="{{headerData.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex appearance="legacy">
+                            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+                            <input matInput [(ngModel)]="headerData.updatedUserText" readonly>
+                        </mat-form-field>
+
+                    </div>
+
+                    <mat-card-actions>
+                        <button mat-raised-button (click)="cancel()">{{'GENERAL.CANCEL' | translate}}</button>
+                        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+                    </mat-card-actions>
+                </div>
+
+
+            </mat-card>
+
+            <div class="biruni-action-toolbar">
+
+                <div style="float:left; width:500px; text-align:left;">
+                    <button mat-icon-button color="primary" (click)="showBulkComfirmationInput()" style="margin-left:10px;">
+                        <mat-icon>playlist_add</mat-icon>
+                    </button>
+                    <button *ngIf="this.showBulkInputs" mat-icon-button color="primary" (click)="comfirmAllSelected()" style="margin-left:10px;">
+                        <mat-icon>library_add_check</mat-icon>
+                    </button>
+                    <input placeholder="{{ 'GENERAL.QUICKFILTER' | translate }}" style="width:150px; margin-left:15px;" [ngModel]="customerOrderQuickFilterValue" (ngModelChange)="customerOrderItemQuickFilter($event)">
+                </div>
+
+                <button mat-icon-button color="primary" (click)="excelProformaDownload()" style="margin-left:10px;">
+                    <img src="../../../../assets/images/action/excel.png" />
+                </button>
+                <button mat-icon-button color="primary" (click)="pdfProformaDownload()" style="margin-left:10px;">
+                    <img src="../../../../assets/images/action/pdf.png" />
+                </button>
+
+                <button mat-icon-button color="primary" (click)="newItemDialog()" style="margin-left:10px;">
+                    <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="downloadData()" style="margin-left:10px;">
+                    <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" (click)="changeView()" style="margin-left:10px;">
+                    <mat-icon>list</mat-icon>
+                </button>
+
+
+            </div>
+
+            <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                    <ng-container matColumnDef="Actions">
+                        <mat-header-cell *matHeaderCellDef>
+                            <span *ngIf="!showBulkInputs">{{'GENERAL.ACTIONS' | translate}}</span>
+                            <mat-slide-toggle *ngIf="showBulkInputs" [(ngModel)]="selectAll" (change)="selectAllItem()"></mat-slide-toggle>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                <mat-icon aria-label="Edit">edit</mat-icon>
+                            </button>
+                            <button *ngIf="!showBulkInputs" mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                <mat-icon aria-label="Delete">delete</mat-icon>
+                            </button>
+                            <mat-slide-toggle *ngIf="showBulkInputs" [(ngModel)]="row.selected"></mat-slide-toggle>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="qualityControlItemId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.QUALITYCONTROLITEMID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="QualityControlItemId"> {{row.qualityControlItemId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="qualityControlId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.QUALITYCONTROLID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="QualityControlId"> {{row.qualityControlId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ccoiId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.CCOIID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="CcoiId"> {{row.ccoiId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="orderItemNo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.ORDERITEMNO' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="orderItemNo"> {{row.orderItemNo}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.STATUS' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Status" class="{{'quality-control-item-status-'+row.status}}"> {{'QUALITYCONTROLITEM.STATUS_' + row.status | translate}}</mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="productName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.PRODUCTNAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ProductName"> {{row.productName}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="productImage">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.PRODUCTIMAGE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ProductImage">  <img *ngIf="row.productImage" [src]="environment.imagePath + row.productImage" style="height:60px;"> </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="productDescription">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.PRODUCTDESCRIPTION' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ProductDescription"><small>{{row.productDescription}}</small> </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="supplierName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.SUPPLIERNAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="SupplierName"><small> {{row.supplierName}}</small></mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.DESCRIPTION' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Description"> {{row.description}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="numberOfQualityImage">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.NUMBEROFQUALITYIMAGE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="NumberOfQualityImage"> {{row.numberOfQualityImage}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="customerOrderReference">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.CUSTOMERORDERREFERENCE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="customerOrderReference"> {{row.customerOrderReference}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="brandName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.BRANDNAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="brandName"> {{row.brandName}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="quantity">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.QUANTITY' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Quantity"> {{row.requiredQuantity }} / {{row.controlledQuantity}}  {{row.unitText}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.UPDATEDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedDate"> {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedUser">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'QUALITYCONTROLITEM.UPDATEDUSER' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUser}}</mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="updatedUserText">
+                        <mat-header-cell *matHeaderCellDef> {{'QUALITYCONTROLITEM.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="mobileColumn">
+                        <mat-header-cell *matHeaderCellDef> {{'QUALITYCONTROLITEM.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="QualityControl" (click)="editItemDialog(row)">
+                            <mat-card class="example-card" style="width:100%">
+                                <img mat-card-image *ngIf="row.productImage" [src]="environment.imagePath + row.productImage">
+                                <mat-card-content>
+                                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                                        <div fxFlex style="font-size:15px;"> {{row.qualityControlItemId}} - {{row.orderItemNo}} - {{row.customerOrderReference}}</div>
+                                        <div fxFlex style="padding:14px;" class="{{'quality-control-item-status-'+row.status}}"> {{'QUALITYCONTROLITEM.STATUS_' + row.status | translate}}</div>
+                                    </div>
+                                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;"> {{'QUALITYCONTROLITEM.PRODUCTNAME' | translate}} :</label>
+                                            {{row.productName}}
+                                        </div>
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;">{{'QUALITYCONTROLITEM.PRODUCTDESCRIPTION' | translate}} :</label>
+                                            <small>{{row.productDescription}}</small>
+                                        </div>
+                                    </div>
+                                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;"> {{'QUALITYCONTROLITEM.SUPPLIERNAME' | translate}} :</label>   {{row.supplierName}}
+                                        </div>
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;"> {{'QUALITYCONTROLITEM.DESCRIPTION' | translate}} :</label>  {{row.description}}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-weight:bold;">  {{'QUALITYCONTROLITEM.QUANTITY' | translate}} :</label>  {{row.requiredQuantity }} / {{row.controlledQuantity}}  {{row.unitText}}
+                                    </div>
+                                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;"> {{'QUALITYCONTROLITEM.UPDATEDUSER' | translate}}  :</label>  {{row.updatedUserText}}
+                                        </div>
+                                        <div fxFlex>
+                                            <label style="font-weight:bold;"> {{'QUALITYCONTROLITEM.UPDATEDDATE' | translate}} :</label>  {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}}
+                                        </div>
+                                    </div>
+                                </mat-card-content>
+                            </mat-card>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                               [pageSize]="this.queryInfo.pager.pageSize"
+                               (page)="pageEvent=$event; onPaginateChange($event)"
+                               [pageSizeOptions]="[10, 25, 50,100,500]"></mat-paginator>
+            </div>
+            <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+        </div>
+    </mat-sidenav-content>
+
+    <mat-sidenav #sidenav mode="over"
+                 class="biruni-filter-sidebar" position="end">
+
+        <div style="margin-bottom:10px;">
+            <button mat-raised-button color="primary" (click)="filterData()" [style.width.%]="45" style="margin-right:10px;">{{'GENERAL.FILTER' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="clearFilter()" [style.width.%]="45">{{'GENERAL.CLEARFILTER' | translate}}</button>
+        </div>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.QUALITYCONTROLITEMID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.qualityControlItemId">
+        </mat-form-field>
+
+        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROLITEM.ORDERITEMNO' | translate }}" [initValue]="filter.ccoiId" [endpoint]="'/ComfirmedCustomerOrderItem/GetListForCombo'" (onChange)="onChange($event,filter,'ccoiId')" [isRequired]="false"></fast-autocomplete>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'QUALITYCONTROLITEM.STATUS' | translate }}</mat-label>
+            <mat-select [(ngModel)]="filter.status">
+                <mat-option [value]="1">
+                    {{'QUALITYCONTROLITEM.STATUS_1' | translate}}
+                </mat-option>
+                <mat-option [value]="2">
+                    {{'QUALITYCONTROLITEM.STATUS_2' | translate}}
+                </mat-option>
+                <mat-option [value]="3">
+                    {{'QUALITYCONTROLITEM.STATUS_3' | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.DESCRIPTION'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.description">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.PRODUCTNAME'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.productName">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.SUPPLIERNAME'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.supplierName">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.BRANDNAME'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.brandName">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'QUALITYCONTROLITEM.CUSTOMERORDERREFERENCE'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.customerOrderReference">
+        </mat-form-field>
+
+    </mat-sidenav>
+</mat-sidenav-container>
+
+<style>
+    .cdk-overlay-pane {
+        max-width: 100vw !important;
+        max-height: 100vh !important;
+    }
+</style>

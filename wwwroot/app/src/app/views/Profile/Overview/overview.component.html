@@ -1,0 +1,68 @@
+<div>
+
+    <div flex class="mat-elevation-z8" style="padding:20px; margin:15px;">
+        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+            <div>
+                <h3 style="margin-bottom:15px;">{{'USER.USERINFOHEADER'| translate}}</h3>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{'USER.USERNAME'| translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="auth.userName" autocomplete="off" disabled>
+                </mat-form-field>
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{'USER.FIRSTNAME'| translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="auth.firstName" autocomplete="off" disabled>
+                </mat-form-field>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{'USER.LASTNAME'| translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="auth.lastName" autocomplete="off" disabled>
+                </mat-form-field>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{'USER.EMAIL'| translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="auth.email" autocomplete="off" disabled>
+                </mat-form-field>
+            </div>
+            <div>
+                <h3 style="margin-bottom:15px;">{{'USER.PROFILEIMAGE'| translate}}</h3>
+
+                <div  style="text-align:center; background-color:beige" (paste)="onPaste($event)">
+                    <img *ngIf="auth.profileImage" [src]="environment.imagePath + auth.profileImage" style="height:160px; text-align:center;">
+                    <img *ngIf="!auth.profileImage" src="assets/images/no-image.jpg" style="height:160px; text-align:center;">
+                    <input type="file" class="file-input" style="display:none"
+                           (change)="onFileSelected($event)" #fileUpload>
+
+                    <div class="file-upload">
+                        <button mat-raised-button color="primary" class="upload-btn" style="width:120px;"
+                                (click)="fileUpload.click()">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mat-elevation-z8" style="padding: 20px; margin: 15px;">
+        <h3 style="margin-bottom:15px;">{{'USER.PASSWORDUPDATEHEADER'| translate}}</h3>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.OLDPASSWORD'| translate}}</mat-label>
+            <input matInput type="password" [(ngModel)]="passwordModel.oldPassword" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.NEWPASSWORD'| translate}}</mat-label>
+            <input matInput type="password" [(ngModel)]="passwordModel.newPassword" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.NEWPASSWORDAGAIN'| translate}}</mat-label>
+            <input matInput type="password" [(ngModel)]="passwordModel.newPasswordAgain" autocomplete="off">
+        </mat-form-field>
+
+        <div style="text-align:right">
+            <button mat-raised-button color="primary" (click)="updatePassword()">{{'USER.UPDATEPASSWORD' | translate}}</button>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using @AppNamespace@.Services.System;
+using @AppNamespace@.Shared;
+using @AppNamespace@.Shared.Export;
+using @AppNamespace@.Shared.Filters;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
+namespace @AppNamespace@.Controllers.System
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class @Entity@Controller : ControllerBase
+    {
+        private readonly @Entity@Service _@SEntity@Service;
+        private readonly UserInfo _userInfo;
+        private readonly SessionHelper _sessionHelper;
+        private readonly SystemLogService _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public @Entity@Controller(IHttpContextAccessor httpContextAccessor)
+        {
+            _@SEntity@Service = new @Entity@Service();
+            _sessionHelper = new SessionHelper(httpContextAccessor.HttpContext);
+            _userInfo = _sessionHelper.GetCurrentUser();
+            _logger = new SystemLogService();
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        [HttpPost("Get@Entity@List")]
+        [SessionFilterAtrribute]
+        public ReturnInfo<@Entity@DTO> Get@Entity@List([FromBody] @Entity@ListQueryParams  @SEntity@ListQueryParams)
+        {
+             ReturnInfo<@Entity@DTO> returnInfo = new ReturnInfo<@Entity@DTO>();
+            try
+            {
+                var resultData = _@SEntity@Service.Get@Entity@List(@SEntity@ListQueryParams.Filter, @SEntity@ListQueryParams.QueryInfo,@SEntity@ListQueryParams.IsExport);
+               
+                if (!@SEntity@ListQueryParams.IsExport)
+                {
+                    returnInfo.Data = resultData.Data;
+                }
+                else
+                {
+                    returnInfo.Key = ExcelHelper.AddListAsExcelToCache<@Entity@DTO>(resultData.Data, @SEntity@ListQueryParams.ColumnInfos);
+                }
+
+                returnInfo.TotalCount = resultData.TotalCount;
+                returnInfo.IsSuccess = true;
+
+            }
+            catch (Exception ex)
+            {
+                returnInfo.IsSuccess = false;
+                returnInfo.ErrorMessage = ex.Message;
+                _logger.AddLog("@Entity@Controller.Get@Entity@List", ex.ToString(), _userInfo.UserId);
+            }
+
+            return returnInfo;
+        }
+
+        [HttpPost("Save@Entity@")]
+        [SessionFilterAtrribute]
+        public ReturnInfo<@Entity@DTO> Save@Entity@([FromBody] @Entity@DTO @SEntity@DTO)
+        {
+            ReturnInfo<@Entity@DTO> returnInfo = new ReturnInfo<@Entity@DTO>();
+
+            try
+            {
+                returnInfo.Data = new List<@Entity@DTO> { _@SEntity@Service.Save@Entity@(@SEntity@DTO, _userInfo) };
+                returnInfo.IsSuccess = true;
+                returnInfo.Message = "GENERAL.SAVED";
+            }
+            catch (Exception ex)
+            {
+                returnInfo.IsSuccess = false;
+                returnInfo.ErrorMessage = ex.Message;
+                _logger.AddLog("@Entity@Controller.Save@Entity@", ex.ToString(), _userInfo.UserId);
+            }
+
+            return returnInfo;
+
+        }
+
+        [HttpPost("GetListForCombo")]
+        [SessionFilterAtrribute]
+        public ReturnInfo<ItemForCombo> GetListForCombo([FromBody] ListForComboFilter filter)
+        {
+            ReturnInfo<ItemForCombo> returnInfo = new ReturnInfo<ItemForCombo>();
+
+            try
+            {
+               var _@SEntity@ListForCombo = _@SEntity@Service.GetListForCombo(filter.Search, filter.Id);
+                returnInfo.IsSuccess = true;
+                returnInfo.Data = _@SEntity@ListForCombo;
+            }
+            catch (Exception ex)
+            {
+                returnInfo.IsSuccess = false;
+                returnInfo.ErrorMessage = ex.Message;
+                _logger.AddLog("@Entity@Controller.GetListForCombo", ex.ToString(), _userInfo.UserId);
+            }
+
+            return returnInfo;
+        }
+
+
+        [HttpPost("Delete@Entity@")]
+        [SessionFilterAtrribute]
+        public ReturnInfo<@Entity@DTO> Delete@Entity@([FromBody] @Entity@DTO @SEntity@DTO)
+        {
+            ReturnInfo<@Entity@DTO> returnInfo = new ReturnInfo<@Entity@DTO>();
+
+            try
+            {
+                _@SEntity@Service.Delete@Entity@(@SEntity@DTO);
+                returnInfo.IsSuccess = true;
+                returnInfo.Message = "GENERAL.DELETED";
+            }
+            catch (Exception ex)
+            {
+                returnInfo.IsSuccess = false;
+                returnInfo.ErrorMessage = ex.Message;
+                _logger.AddLog("@Entity@Controller.Delete@Entity@", ex.ToString(), _userInfo.UserId);
+            }
+
+            return returnInfo;
+
+        }
+
+        public class @Entity@ListQueryParams
+        {
+            public @Entity@Filter Filter { get; set; }
+            public QueryInfo QueryInfo { get; set; }
+            public bool IsExport { get; set; }
+            public List<ColumnInfo> ColumnInfos {get;set;}
+         }
+    }
+}

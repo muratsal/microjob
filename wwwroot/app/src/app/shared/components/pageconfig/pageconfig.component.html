@@ -1,0 +1,16 @@
+﻿<h2 mat-dialog-title>{{'GENERAL.PAGECONFIG' | translate}}</h2>
+<mat-dialog-content class="mat-typography">
+   
+    <mat-selection-list #columns [(ngModel)]="displayedColumns">
+        <mat-list-option [value]="column.prop" *ngFor="let column of columnList">
+            {{(column.translate=='ACTIONS' ?  'GENERAL.' : (pageName +'.')) + column.translate | translate}}
+        </mat-list-option>
+    </mat-selection-list>
+
+    <!--<p>
+        Options selected: {{displayedColumns}}
+    </p>-->
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button  color="warn" cdkFocusInitial (click)="save()">{{ "GENERAL.SAVE"| translate}}</button>
+</mat-dialog-actions>

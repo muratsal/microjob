@@ -1,0 +1,10 @@
+﻿
+
+
+
+-- Scaffold-DbContext "Server=192.168.1.158\MSSQL;Database=NanoGo;User Id=sa;Password=357123;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+-- Scaffold-DbContext "Server=192.168.1.12\SQLEXPRESS;Database=NanoGo;User Id=sa;Password=asrra1907;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
+-- optionsBuilder.UseSqlServer("Server=192.168.1.12\\SQLEXPRESS;Database=NanoGo;User Id=sa;Password=asrra1907;");
+
+--http://localhost:39210/api/TemplateEngine/CreateBackendTemplate?menu=System&entity=Company&primaryKey=CompanyId--http://localhost:39210/api/TemplateEngine/CreateBackendTemplate?menu=System&entity=Company&primaryKey=CompanyId
+--http://localhost:39210/api/TemplateEngine/CreateFrontendTemplate?menu=System&entity=Company&primaryKey=CompanyId--http://localhost:39210/api/TemplateEngine/CreateBackendTemplate?menu=System&entity=Company&primaryKey=CompanyId

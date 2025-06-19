@@ -1,0 +1,177 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true">
+    <mat-sidenav-content style="min-height: 80vh; margin-top: -8px;">
+        <div class="ml-8 mr-8 mt-8 pb-16">
+
+            <div class="biruni-action-toolbar">
+
+
+                <button mat-icon-button color="primary" (click)="newItemDialog()" style="margin-left:10px;">
+                    <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="downloadData()" style="margin-left:10px;">
+                    <mat-icon>download</mat-icon>
+                </button>
+
+                <!--<button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>upload</mat-icon>
+                </button>-->
+            </div>
+
+            <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                    <ng-container matColumnDef="Actions">
+                        <mat-header-cell *matHeaderCellDef> {{'GENERAL.ACTIONS' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                <mat-icon aria-label="Edit">edit</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                <mat-icon aria-label="Delete">delete</mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="userId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.USERID' | translate}}   </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UserId">
+                            {{row.userId}}
+
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="userName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USER.USERNAME' | translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UserName"> {{row.userName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.EMAIL' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Email"> {{row.email}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="password">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.PASSWORD' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Password"> {{row.password}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="firstName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.FIRSTNAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="FirstName"> {{row.firstName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lastName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.LASTNAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Last Name"> {{row.lastName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="isActive">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.ISACTIVE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="IsActive">
+                            <mat-slide-toggle [(ngModel)]="row.isActive" disabled> </mat-slide-toggle>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="accesFromOutside">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.ACCESFROMOUTSIDE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="accesFromOutside">
+                            <mat-slide-toggle [(ngModel)]="row.accesFromOutside" disabled> </mat-slide-toggle>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="userType">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.USERTYPE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="User Type"> {{'USER.USERTYPE_'  +row.userType | translate}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{'USER.UPDATEDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="updatedDate"><small> {{row.updatedDate | date:'yyyy-MM-dd HH:mm'}} </small> </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedUserText">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'USER.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                    </ng-container>
+
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                               [pageSize]="this.queryInfo.pager.pageSize"
+                               (page)="pageEvent=$event; onPaginateChange($event)"
+                               [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+            </div>
+            <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+        </div>
+    </mat-sidenav-content>
+
+    <mat-sidenav #sidenav mode="over"
+                 class="biruni-filter-sidebar" position="end">
+
+        <div style="margin-bottom:10px;">
+            <button mat-raised-button color="primary" (click)="filterData()" [style.width.%]="45" style="margin-right:10px;">{{'FILTER' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="clearFilter()" [style.width.%]="45">{{'CLEARFILTER' | translate}}</button>
+        </div>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.USERNAME'| translate}}</mat-label>
+            <input matInput [(ngModel)]="filter.userName">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.EMAIL'| translate}}</mat-label>
+            <input matInput [(ngModel)]="filter.email">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.FIRSTNAME'| translate}}</mat-label>
+            <input matInput [(ngModel)]="filter.firstName">
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'USER.LASTNAME'| translate}}</mat-label>
+            <input matInput [(ngModel)]="filter.lastName">
+        </mat-form-field>
+
+        <mat-slide-toggle [(ngModel)]="filter.isActive">{{'USER.ISACTIVE'| translate}}</mat-slide-toggle>
+
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'USER.LASTLOGINDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="lastLoginDatepicker" [(ngModel)]="filter.lastLoginDate">
+                <mat-datepicker-toggle matSuffix [for]="lastLoginDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #lastLoginDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'USER.LASTLOGINDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="lastLoginDate2picker" [(ngModel)]="filter.lastLoginDate2">
+                <mat-datepicker-toggle matSuffix [for]="lastLoginDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #lastLoginDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'USER.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDatepicker" [(ngModel)]="filter.createdDate">
+                <mat-datepicker-toggle matSuffix [for]="createdDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'USER.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDate2picker" [(ngModel)]="filter.createdDate2">
+                <mat-datepicker-toggle matSuffix [for]="createdDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </mat-sidenav>
+</mat-sidenav-container>

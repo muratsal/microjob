@@ -1,0 +1,209 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'PERMISSION.PERMISSION' | translate}}  - {{row.permissionId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'PERMISSION.PERMISSION' | translate}} - {{row.permissionId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="{{'PERMISSION.PERMISSION' | translate }}">
+            <div style="padding:20px;">
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.EMPLOYEEID' | translate }}</mat-label>
+                        <input type="number" matInput [(ngModel)]="row.employeeId">
+                    </mat-form-field>-->
+                    <fast-autocomplete *gIf="allUserAuth && isNew" [style.width.%]="100" placeholder="{{ 'PERMISSION.EMPLOYEENAME' | translate }}" [initValue]="row.employeeId" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,row,'employeeId')" [isRequired]="true"></fast-autocomplete>
+
+                    <mat-form-field *gIf="!isNew" [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.EMPLOYEENAME' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.employeeName">
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.PERMISSIONTYPE' | translate }}</mat-label>
+                        <!--<input type="number" matInput [(ngModel)]="row.permissionType">-->
+                        <mat-select [(ngModel)]="row.permissionType">
+                            <mat-option *ngFor="let title of permissionTypeList" [value]="title.paramId">
+                                {{ title.paramCode }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.STARTDATE' | translate }}</mat-label>
+                        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="row.startDate">
+                        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startDatePicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.DAYCOUNT' | translate }}</mat-label>
+                        <input type="number" matInput [(ngModel)]="row.dayCount">
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.ENDDATE' | translate }}</mat-label>
+                        <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="row.endDate">
+                        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endDatePicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="!isNew && editPermission==true" [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.STATUS' | translate }}</mat-label>
+                        <!--<input type="number" matInput [(ngModel)]="row.status">-->
+                        <mat-select [(ngModel)]="row.status" required>
+                            <mat-option [value]="1">
+                                {{ 'PERMISSION.STATUS_1' | translate }}
+                            </mat-option>
+                            <mat-option [value]="2">
+                                {{ 'PERMISSION.STATUS_2' | translate }}
+                            </mat-option>
+                            <mat-option [value]="3">
+                                {{ 'PERMISSION.STATUS_3' | translate }}
+                            </mat-option>
+                            <mat-option [value]="4">
+                                {{ 'PERMISSION.STATUS_4' | translate }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.DESCRIPTION' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.description">
+                    </mat-form-field>
+                    <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.PROXYEMPLOYEE' | translate }}</mat-label>
+                        <input type="number" matInput [(ngModel)]="row.proxyEmployee">
+                    </mat-form-field>-->
+                    <fast-autocomplete [style.width.%]="100" placeholder="{{ 'PERMISSION.PROXYEMPLOYEE' | translate }}" [initValue]="row.proxyEmployee" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,row,'proxyEmployee')" [isRequired]="false" [showRemove]="true"></fast-autocomplete>
+                </div>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.DUTIES' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.duties">
+                    </mat-form-field>
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'PERMISSION.NOTE' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.note">
+                    </mat-form-field>
+                </div>
+                <mat-form-field *gIf="!isNew" [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'PERMISSION.APPROVEDWAITINGEMPLOYEE' | translate }}</mat-label>
+                    <input type="number" matInput [(ngModel)]="row.approvedWaitingEmployee">
+                </mat-form-field>
+
+                <mat-form-field *gIf="!isNew" [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'PERMISSION.APPROVEDWAITINGEMPLOYEE' | translate }}</mat-label>
+                    <input type="number" matInput [(ngModel)]="row.approvedWaitingEmployee">
+                </mat-form-field>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.createdUserText" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.updatedUserText" readonly>
+                    </mat-form-field>
+
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab *ngIf="!isNew" label="{{'PERMISSIONLOG.PERMISSIONLOGMENU' | translate }}">
+            <div style="padding:20px;">
+                <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                    <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="Actions">
+                            <mat-header-cell *matHeaderCellDef> {{'GENERAL.ACTIONS' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                    <mat-icon aria-label="Edit">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                    <mat-icon aria-label="Delete">delete</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="permissionLogId">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.PERMISSIONLOGID' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="PermissionLogId"> {{row.permissionLogId}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="employeeId">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.EMPLOYEEID' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="EmployeeId"> {{row.employeeName}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.STATUS' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="Status"> {{ 'PERMISSIONLOG.STATUS_'+row.status | translate }}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="permissionId">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.PERMISSIONID' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="PermissionId"> {{row.permissionId}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="updatedDate">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.UPDATEDDATE' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="UpdatedDate"> {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="updatedUser">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSIONLOG.UPDATEDUSER' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUser}}</mat-cell>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="updatedUserText">
+                            <mat-header-cell *matHeaderCellDef> {{'PERMISSIONLOG.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                            <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </mat-row>
+                    </mat-table>
+                    <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                                   [pageSize]="this.queryInfo.pager.pageSize"
+                                   (page)="pageEvent=$event; onPaginateChange($event)"
+                                   [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+                </div>
+                <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="40%">
+        <!--<button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>-->
+
+        <button *ngIf="isNew==false && pageType==3" mat-raised-button color="primary" (click)="comfirmPermission(true)">{{'GENERAL.COMFIRM' | translate}}</button>
+        <button *ngIf="isNew==false && pageType==3" mat-raised-button color="warn" (click)="comfirmPermission(false)">{{'GENERAL.REJECT' | translate}}</button>
+    </div>
+    <div fxFlex="60%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button *ngIf="isNew || editPermission || (pageType == 2  &&  row.status==2) " mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

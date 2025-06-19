@@ -1,0 +1,9 @@
+﻿<h2 mat-dialog-title>{{ caption | translate}}</h2>
+<mat-dialog-content class="mat-typography">
+    <img [src]="currentImage" />
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+        <button mat-raised-button [disabled]="currentImageIndex==0" (click)="previousImage()">{{'GENERAL.PREVIOUS' | translate}}</button>
+        <button mat-raised-button [disabled]="imageList.length -1 <= currentImageIndex"  (click)="nextImage()">{{'GENERAL.NEXT' | translate}}</button>
+    <!--<button mat-raised-button mat-dialog-close>{{'GENERAL.CLOSE' | translate}}</button>-->
+</mat-dialog-actions>

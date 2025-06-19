@@ -1,0 +1,165 @@
+﻿using @AppNamespace@.Shared;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace @AppNamespace@.Services.System
+{
+    public class @Entity@Service
+    {
+
+       public List<ItemForCombo> GetListForCombo(string search, int? value)
+        {
+            using (Models.@Context@ dbContext = new Models.@Context@())
+            {
+                List<ItemForCombo> itemComboList = new List<ItemForCombo>();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    itemComboList = dbContext.@Entity@s.
+                       Where(x => x.@PrimaryKey@.ToString().Contains(search)).
+                       Take(20).
+                       ToList().
+                       Select(x => new ItemForCombo
+                       {
+                           DisplayText = x.@PrimaryKey@.ToString(),
+                           Value = x.@PrimaryKey@,
+                           FreeText = x.@PrimaryKey@.ToString()
+
+                       }).ToList();
+                }
+                else if (value.HasValue && value.Value != 0)
+                {
+                    itemComboList = dbContext.@Entity@s.
+                      Where(x => x.@PrimaryKey@ == value).
+                      ToList().
+                      Select(x => new ItemForCombo
+                      {
+                          DisplayText = x.@PrimaryKey@.ToString(),
+                           Value = x.@PrimaryKey@,
+                           FreeText = x.@PrimaryKey@.ToString()
+
+                      }).ToList();
+                }
+
+                return itemComboList;
+            }
+        }
+
+        public PageList<@Entity@DTO> Get@Entity@List(@Entity@Filter filter, @AppNamespace@.Shared.QueryInfo queryInfo,bool isExport)
+        {
+            using (Models.@Context@ dbContext = new Models.@Context@())
+            {
+                var dbQuery = dbContext.@Entity@s.OrderByDescending(x => x.@PrimaryKey@).Where(x => 1 == 1);
+                int totalCount = 0;
+
+                if (filter != null)
+                {
+                    @Filters@
+                }
+
+                totalCount = dbQuery.Count();
+
+                if (queryInfo != null)
+                {
+                    if (!string.IsNullOrEmpty(queryInfo.OrderBy))
+                    {
+                        string clientOrderByName = queryInfo.OrderBy.StartsWith("-") ? queryInfo.OrderBy.Substring(1) : queryInfo.OrderBy;
+                        string orderByName = typeof(Models.@Entity@).GetProperties().Where(x => x.Name.ToUpper() == clientOrderByName.ToUpper()).First().Name;
+
+                        if (queryInfo.OrderBy.StartsWith("-"))
+                        {
+                            dbQuery = dbQuery.OrderByDescending(p => EF.Property<object>(p, orderByName));
+                        }
+                        else
+                        {
+                            dbQuery = dbQuery.OrderBy(p => EF.Property<object>(p, orderByName));
+                        }
+                    }
+                }
+
+                 if (!isExport)
+                {
+                    if (queryInfo != null && queryInfo.Pager != null)
+                    {
+                        dbQuery = dbQuery.Skip((queryInfo.Pager.CurrentPage) * queryInfo.Pager.PageSize).Take(queryInfo.Pager.PageSize);
+                    }
+                }
+
+                var data = dbQuery.ToList()
+                     .Select(x => new @Entity@DTO
+                     {
+                        @SelectFields@,
+                         CreatedUserText = dbContext.Users.First(y => y.UserId == x.CreatedUser).UserName,
+                         UpdatedUserText = dbContext.Users.First(y => y.UserId == x.UpdatedUser).UserName
+                     }).ToList();
+
+                return new PageList<@Entity@DTO> { Data = data, TotalCount = totalCount };
+
+            }
+        }
+
+        public @Entity@DTO Save@Entity@(@Entity@DTO @SEntity@DTO,  UserInfo userInfo)
+        {
+            Models.@Entity@ @SEntity@ = new Models.@Entity@();
+            using (Models.@Context@ dbContext = new Models.@Context@())
+            {
+                bool isNewRecord = @SEntity@DTO.@PrimaryKey@ == 0;
+                if (isNewRecord)
+                {
+                    @SEntity@.CreatedDate = DateTime.Now;
+                    @SEntity@.CreatedUser = userInfo.UserId;
+                }
+                else
+                {
+                    @SEntity@ = dbContext.@Entity@s.First(x => x.@PrimaryKey@ == @SEntity@DTO.@PrimaryKey@);
+                   
+                }
+
+                 @SEntity@.UpdatedDate = DateTime.Now;
+                 @SEntity@.UpdatedUser = userInfo.UserId;
+
+                @SaveSetFields@
+
+                if (isNewRecord)
+                {
+                    dbContext.@Entity@s.Add(@SEntity@);
+                }
+
+                dbContext.SaveChanges();
+
+                @SEntity@DTO.@PrimaryKey@ = @SEntity@.@PrimaryKey@;
+            }
+
+            return @SEntity@DTO;
+        }
+
+
+        public void Delete@Entity@(@Entity@DTO @SEntity@DTO)
+        {
+            using (Models.@Context@ dbContext = new Models.@Context@())
+            {
+                var @SEntity@ = dbContext.@Entity@s.FirstOrDefault(x => x.@PrimaryKey@ == @SEntity@DTO.@PrimaryKey@);
+                if (@SEntity@ != null)
+                {
+                    dbContext.@Entity@s.Remove(@SEntity@);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+    }
+
+
+    public class @Entity@DTO
+    {
+       @EntityDTOFields@
+       public String CreatedUserText  {get;set;}
+       public String UpdatedUserText  {get;set;}
+    }
+
+    public class @Entity@Filter
+    {
+        @EntityFilterFields@
+    }
+}

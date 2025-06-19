@@ -1,0 +1,47 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title >{{'GENERAL.NEWRECORD' | translate}} {{'QUALITYCONTROL.BULKCOMFIRMATION' | translate}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'QUALITYCONTROL.BULKOPERATIONTYPE' | translate }}</mat-label>
+        <mat-select [(ngModel)]="selectedBulkOperation" required>
+            <mat-option *ngFor="let operation  of [1,2]" [value]="operation">
+                {{ 'QUALITYCONTROL.BULKOPERATIONTYPE_'+ operation.toString() | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field [style.width.%]="100" appearance="legacy" *ngIf="selectedBulkOperation==2">
+        <mat-label>{{ 'QUALITYCONTROLITEM.STATUS' | translate }}</mat-label>
+        <mat-select [(ngModel)]="controlStatus"  required>
+            <mat-option [value]="1">
+                {{'QUALITYCONTROLITEM.STATUS_1' | translate}}
+            </mat-option>
+            <mat-option [value]="2">
+                {{'QUALITYCONTROLITEM.STATUS_2' | translate}}
+            </mat-option>
+            <mat-option [value]="3">
+                {{'QUALITYCONTROLITEM.STATUS_3' | translate}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div>
+        {{row.bulkQualityControlItemList.length}} {{"QUALITYCONTROL.CONTROLITEMSELECTED"| translate}}
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+
+    <div fxFlex="100%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+
+</mat-dialog-actions>
+
+

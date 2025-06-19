@@ -1,0 +1,170 @@
+﻿<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">New User - {{row.userId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">Edit User - {{row.userId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-tab-group animationDuration="0ms">
+        <mat-tab label="{{'USER.USERTAB' | translate}}">
+            <mat-card>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.USERNAME' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.userName">
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.EMAIL' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.email">
+                    </mat-form-field>
+                </div>
+
+
+                <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="row.password">
+    </mat-form-field>-->
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.FIRSTNAME' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.firstName">
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.LASTNAME' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.lastName">
+                    </mat-form-field>
+
+                </div>
+
+                <!--<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex="50" appearance="legacy">
+                        <mat-label>{{ 'USER.LASTLOGINIP' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.lastLoginIp" readonly>
+                    </mat-form-field>-->
+
+
+
+                    <!--<mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.LASTLOGINDATE' | translate }}</mat-label>
+            <input matInput [matDatepicker]="lastLoginDatePicker" [(ngModel)]="row.lastLoginDate">
+            <mat-datepicker-toggle matSuffix [for]="lastLoginDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #lastLoginDatePicker></mat-datepicker>
+        </mat-form-field>-->
+
+
+                    <!--<mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.LASTLOGINDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.lastLoginDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                </div>-->
+
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                <mat-form-field  [style.width.%]="100" appearance="legacy">
+                    <mat-slide-toggle [(ngModel)]="row.isActive"> </mat-slide-toggle>
+                    <span style="margin-left:10px;">{{ 'USER.ISACTIVE' | translate }}</span>
+                    <textarea matInput style="display:none;"></textarea>
+                </mat-form-field>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'USER.LANGUAGE' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="row.language" required>
+                        <mat-option *ngFor="let language of languageList" [value]="language.paramId">
+                            {{language.paramCode}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'USER.USERTYPE' | translate }}</mat-label>
+        <mat-select [(ngModel)]="row.userType" required>
+            <mat-option [value]="1">
+                {{'USER.USERTYPE_1' | translate}}
+            </mat-option>
+            <mat-option [value]="2">
+                {{'USER.USERTYPE_2' | translate}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>-->
+
+            </div>
+                <!--<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <fast-autocomplete *ngIf="row.userType==2" [style.width.%]="100" placeholder="{{ 'USER.CUSTOMERID' | translate }}" [initValue]="row.customerId" [endpoint]="'/Customer/GetListForCombo'" (onChange)="onChange($event,row,'customerId')"></fast-autocomplete>
+
+                    <mat-form-field fxFlex="50" appearance="legacy">
+                        <mat-slide-toggle [(ngModel)]="row.accesFromOutside"> </mat-slide-toggle>
+                        <span style="margin-left:10px;">{{ 'USER.ACCESFROMOUTSIDE' | translate }}</span>
+                        <textarea matInput style="display:none;"></textarea>
+                    </mat-form-field>
+
+                </div>-->
+
+             
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.createdUserText" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.updatedUser | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.updatedUserText" readonly>
+                    </mat-form-field>
+
+                </div>
+            </mat-card>
+        </mat-tab>
+
+        <mat-tab label="{{'USER.USERROLETAB' | translate}}">
+
+            <mat-form-field fxFlex appearance="legacy" style="margin-bottom:0px; margin-left:20px; margin-top:10px;">
+                <mat-label>{{ 'GENERAL.FILTERLIST' | translate }}</mat-label>
+                <input matInput [(ngModel)]="this.filterRole">
+            </mat-form-field>
+            <mat-card>
+                <mat-selection-list>
+                    <mat-list-option *ngFor="let row of this.getFilteredRoles()" (click)="onUserRoleClick($event,row)" [value]="row.roleId" [selected]="row.isUserRole">
+                        {{row.roleName}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </mat-card>
+
+        </mat-tab>
+
+    </mat-tab-group>
+
+
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button mat-raised-button color="warn" (click)="delete()">Delete</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="save()">Save</button>
+    </div>
+</mat-dialog-actions>
+
+

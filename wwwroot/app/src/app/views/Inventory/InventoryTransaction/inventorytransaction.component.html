@@ -1,0 +1,171 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true">
+    <mat-sidenav-content style="min-height: 80vh; margin-top: -8px;">
+        <div class="ml-8 mr-8 mt-8 pb-16">
+
+            <div class="biruni-action-toolbar">
+
+                <button mat-icon-button color="primary" (click)="newItemDialog()" style="margin-left:10px;">
+                    <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="downloadData()" style="margin-left:10px;">
+                    <mat-icon>download</mat-icon>
+                </button>
+
+                <!--<button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>upload</mat-icon>
+                </button>-->
+            </div>
+
+            <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                    <ng-container matColumnDef="Actions">
+                        <mat-header-cell *matHeaderCellDef> {{'GENERAL.ACTIONS' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                <mat-icon aria-label="Edit">edit</mat-icon>
+                            </button>
+                            <button mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                <mat-icon aria-label="Delete">delete</mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="inventoryTransId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.INVENTORYTRANSID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="InventoryTransId"> {{row.inventoryTransId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="inventoryId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.INVENTORYID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="InventoryId"> {{row.inventoryId}}</mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="inventorySerieNo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.INVENTORYSERIENO' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="inventorySerieNo"> {{row.inventorySerieNo}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="transDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.TRANSDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="TransDate"> {{row.transDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="employeeId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.EMPLOYEEID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="EmployeeId"> {{row.employeeId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="employeeName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.EMPLOYEENAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="EmployeeName"> {{row.employeeName}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="transType">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.TRANSTYPE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="TransType"> {{('INVENTORYTRANSACTION.TRANSTYPE_'+ row.transType) | translate}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="note">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.NOTE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Note"> {{row.note}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.UPDATEDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedDate"> {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedUser">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'INVENTORYTRANSACTION.UPDATEDUSER' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUser}}</mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="updatedUserText">
+                        <mat-header-cell *matHeaderCellDef> {{'INVENTORYTRANSACTION.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                               [pageSize]="this.queryInfo.pager.pageSize"
+                               (page)="pageEvent=$event; onPaginateChange($event)"
+                               [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+            </div>
+            <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+        </div>
+    </mat-sidenav-content>
+
+    <mat-sidenav #sidenav mode="over"
+                 class="biruni-filter-sidebar" position="end">
+
+        <div style="margin-bottom:10px;">
+            <button mat-raised-button color="primary" (click)="filterData()" [style.width.%]="45" style="margin-right:10px;">{{'GENERAL.FILTER' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="clearFilter()" [style.width.%]="45">{{'GENERAL.CLEARFILTER' | translate}}</button>
+        </div>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.INVENTORYTRANSID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.inventoryTransId">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.INVENTORYID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.inventoryId">
+        </mat-form-field>
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'INVENTORYTRANSACTION.TRANSDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="transDatepicker" [(ngModel)]="filter.transDate">
+                <mat-datepicker-toggle matSuffix [for]="transDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #transDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'INVENTORYTRANSACTION.TRANSDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="transDate2picker" [(ngModel)]="filter.transDate2">
+                <mat-datepicker-toggle matSuffix [for]="transDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #transDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.EMPLOYEEID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.employeeId">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.TRANSTYPE'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.transType">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.NOTE'| translate}}</mat-label>
+            <input matInput type="text" [(ngModel)]="filter.note">
+        </mat-form-field>
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'INVENTORYTRANSACTION.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDatepicker" [(ngModel)]="filter.createdDate">
+                <mat-datepicker-toggle matSuffix [for]="createdDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'INVENTORYTRANSACTION.CREATEDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="createdDate2picker" [(ngModel)]="filter.createdDate2">
+                <mat-datepicker-toggle matSuffix [for]="createdDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #createdDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'INVENTORYTRANSACTION.CREATEDUSER'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.createdUser">
+        </mat-form-field>
+
+
+    </mat-sidenav>
+</mat-sidenav-container>

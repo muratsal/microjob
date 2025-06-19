@@ -1,0 +1,203 @@
+<mat-sidenav-container class="example-container" [hasBackdrop]="true">
+    <mat-sidenav-content style="min-height: 80vh; margin-top: -8px;">
+        <div class="ml-8 mr-8 mt-8 pb-16">
+
+            <div class="biruni-action-toolbar" >
+
+                <button mat-icon-button color="primary"  *ngIf="pageType==2" (click)="newItemDialog()" style="margin-left:10px;">
+                    <mat-icon>add</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="sidenav.toggle()" style="margin-left:10px;">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+
+                <button mat-icon-button color="primary" (click)="downloadData()" style="margin-left:10px;">
+                    <mat-icon>download</mat-icon>
+                </button>
+
+            </div>
+
+            <div class="mat-elevation-z8" [hidden]="this.showSpinner">
+                <mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+
+                    <ng-container matColumnDef="Actions">
+                        <mat-header-cell *matHeaderCellDef> {{'GENERAL.ACTIONS' | translate}} </mat-header-cell>
+
+                        <mat-cell *matCellDef="let row">
+                            <button mat-icon-button matTooltip="Click to Edit" (click)="editItemDialog(row)" class="iconbutton">
+                                <mat-icon aria-label="Edit">edit</mat-icon>
+                            </button>
+                            <button *ngIf="this.editPermission" mat-icon-button matTooltip="Click to Delete" (click)="delete(row)" class="iconbutton">
+                                <mat-icon aria-label="Delete">delete</mat-icon>
+                            </button>
+                        </mat-cell>
+
+                    </ng-container>
+
+                    <ng-container matColumnDef="permissionId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.PERMISSIONID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="PermissionId"> {{row.permissionId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="employeeId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.EMPLOYEEID' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="EmployeeId"> {{row.employeeId}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="employeeName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.EMPLOYEENAME' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="EmployeeName"> {{row.employeeName}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="permissionType">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.PERMISSIONTYPE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="PermissionType"> {{row.permissionTypeText}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="startDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.STARTDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="StartDate"> {{row.startDate | date:'yyyy-MM-dd'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dayCount">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.DAYCOUNT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="DayCount"> {{row.dayCount}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="endDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.ENDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="EndDate"> {{row.endDate | date:'yyyy-MM-dd'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.STATUS' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Status" class="{{'permission-status-'+row.status}}"> {{('PERMISSION.STATUS_' +row.status) | translate}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.DESCRIPTION' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Description"> {{row.description}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="proxyEmployee">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.PROXYEMPLOYEE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ProxyEmployee"> {{row.proxyEmployee}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="duties">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.DUTIES' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Duties"> {{row.duties}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="note">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.NOTE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="Note"> {{row.note}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="approvedWaitingEmployee">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.APPROVEDWAITINGEMPLOYEE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="ApprovedWaitingEmployee"> {{row.approvedWaitingEmployeeName}}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedDate">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.UPDATEDDATE' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedDate"> {{row.updatedDate | date:'yyyy-MM-dd HH:mm:ss'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="updatedUser">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'PERMISSION.UPDATEDUSER' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUser}}</mat-cell>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="updatedUserText">
+                        <mat-header-cell *matHeaderCellDef> {{'PERMISSION.UPDATEDUSERTEXT' | translate}} </mat-header-cell>
+                        <mat-cell *matCellDef="let row" data-label="UpdatedUser"> {{row.updatedUserText}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;">
+                    </mat-row>
+                </mat-table>
+                <mat-paginator [length]="this.queryInfo.pager.totalCount"
+                               [pageSize]="this.queryInfo.pager.pageSize"
+                               (page)="pageEvent=$event; onPaginateChange($event)"
+                               [pageSizeOptions]="[10, 25, 50]"></mat-paginator>
+            </div>
+            <mat-spinner *ngIf="this.showSpinner === true" style="margin:0 auto; margin-top:150px;"></mat-spinner>
+        </div>
+    </mat-sidenav-content>
+
+    <mat-sidenav #sidenav mode="over"
+                 class="biruni-filter-sidebar" position="end">
+
+        <div style="margin-bottom:10px;">
+            <button mat-raised-button color="primary" (click)="filterData()" [style.width.%]="45" style="margin-right:10px;">{{'GENERAL.FILTER' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="clearFilter()" [style.width.%]="45">{{'GENERAL.CLEARFILTER' | translate}}</button>
+        </div>
+
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PERMISSION.PERMISSIONID'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.permissionId">
+        </mat-form-field>
+        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'PERMISSION.EMPLOYEENAME' | translate }}" [initValue]="filter.employeeId" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,filter,'employeeId')" [isRequired]="false"></fast-autocomplete>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PERMISSION.PERMISSIONTYPE'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.permissionType">
+        </mat-form-field>
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PERMISSION.STARTDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="startDatepicker" [(ngModel)]="filter.startDate">
+                <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PERMISSION.STARTDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="startDate2picker" [(ngModel)]="filter.startDate2">
+                <mat-datepicker-toggle matSuffix [for]="startDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #startDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{'PERMISSION.DAYCOUNT'| translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="filter.dayCount">
+        </mat-form-field>
+        <div>
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PERMISSION.ENDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="endDatepicker" [(ngModel)]="filter.endDate">
+                <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatepicker></mat-datepicker>
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field [style.width.%]="45" appearance="legacy">
+                <mat-label>{{'PERMISSION.ENDDATE'| translate}}</mat-label>
+                <input matInput [matDatepicker]="endDate2picker" [(ngModel)]="filter.endDate2">
+                <mat-datepicker-toggle matSuffix [for]="endDate2picker"></mat-datepicker-toggle>
+                <mat-datepicker #endDate2picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <mat-form-field  [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'PERMISSION.STATUS' | translate }}</mat-label>
+            <mat-select [(ngModel)]="filter.status" >
+                <mat-option [value]="1">
+                    {{ 'PERMISSION.STATUS_1' | translate }}
+                </mat-option>
+                <mat-option [value]="2">
+                    {{ 'PERMISSION.STATUS_2' | translate }}
+                </mat-option>
+                <mat-option [value]="3">
+                    {{ 'PERMISSION.STATUS_3' | translate }}
+                </mat-option>
+                <mat-option [value]="4">
+                    {{ 'PERMISSION.STATUS_4' | translate }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+       
+
+    </mat-sidenav>
+</mat-sidenav-container>

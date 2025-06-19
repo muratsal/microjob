@@ -1,0 +1,79 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'QUALITYCONTROL.QUALITYCONTROL' | translate}}  - {{row.qualityControlId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'QUALITYCONTROL.QUALITYCONTROL' | translate}} - {{row.qualityControlId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROL.CUSTOMERID' | translate }}" [initValue]="row.customerId" [endpoint]="'/Customer/GetListForCombo'" (onChange)="onChange($event,row,'customerId')"></fast-autocomplete>
+      
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'QUALITYCONTROL.STATUS' | translate }}</mat-label>
+            <mat-select [(ngModel)]="row.status" required>
+                <mat-option [value]="1">
+                    {{'QUALITYCONTROL.STATUS_1' | translate}}
+                </mat-option>
+                <mat-option [value]="2">
+                    {{'QUALITYCONTROL.STATUS_2' | translate}}
+                </mat-option>
+                <mat-option [value]="3">
+                    {{'QUALITYCONTROL.STATUS_3' | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+     
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'QUALITYCONTROL.DESCRIPTION' | translate }}</mat-label>
+            <input type="text" matInput [(ngModel)]="row.description">
+        </mat-form-field>
+
+        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROL.ASSIGNEE' | translate }}" [initValue]="row.assignee" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,row,'assignee')" [isRequired]="true"></fast-autocomplete>
+
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.createdUserText" readonly>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.updatedUserText" readonly>
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

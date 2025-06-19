@@ -1,0 +1,166 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'EMPLOYEE.EMPLOYEE' | translate}}  - {{row.employeeId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'EMPLOYEE.EMPLOYEE' | translate}} - {{row.employeeId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <div [style.width.%]="66">
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.FIRSTNAME' | translate }}</mat-label>
+                    <input type="text" matInput [(ngModel)]="row.firstName">
+                </mat-form-field>
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.LASTNAME' | translate }}</mat-label>
+                    <input type="text" matInput [(ngModel)]="row.lastName">
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.WORKSTARTDATE' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="workStartDatePicker" [(ngModel)]="row.workStartDate">
+                    <mat-datepicker-toggle matSuffix [for]="workStartDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #workStartDatePicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.BIRTHDATE' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="birthDatePicker" (change)="changeDate()" [(ngModel)]="row.birthDate">
+                    <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #birthDatePicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.TITLE' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="row.titleId" required>
+                        <mat-option *ngFor="let title of titleList" [value]="title.paramId">
+                            {{ title.paramCode }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'EMPLOYEE.DEPARTMENT' | translate }}</mat-label>
+                    <mat-select [(ngModel)]="row.departmentId" required>
+                        <mat-option *ngFor="let department of departmentList" [value]="department.paramId">
+                            {{ department.paramCode }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+        </div>
+        <div [style.width.%]="33" style="text-align:center;">
+            <img *ngIf="row.image" [src]="environment.imagePath + row.image" style="height:160px; text-align:center;">
+            <input type="file" class="file-input" style="display:none"
+                   (change)="onFileSelected($event)" #fileUpload>
+
+            <div class="file-upload">
+                <!--{{row.productImage || "No file uploaded yet."}}-->
+                <button mat-raised-button color="primary" class="upload-btn" style="width:120px;"
+                        (click)="fileUpload.click()">
+                    <mat-icon>attach_file</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field [style.width.%]="50" appearance="legacy">
+            <mat-label>{{ 'INVENTORY.COMPANYNAME' | translate }}</mat-label>
+            <mat-select [(ngModel)]="row.companyId">
+                <mat-option *ngFor="let title of companyList" [value]="title.companyId">
+                    {{ title.companyName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field [style.width.%]="25" appearance="legacy">
+            <mat-label>{{ 'EMPLOYEE.USERNAME' | translate }}</mat-label>
+            <mat-select [(ngModel)]="row.userId" required>
+                <mat-option *ngFor="let user of userList" [value]="user.userId">
+                    {{ user.userName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <fast-autocomplete [style.width.%]="25" placeholder="{{ 'EMPLOYEE.RESPONSIBLEFOR' | translate }}" [initValue]="row.responsibleFor" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,row,'responsibleFor')" [isRequired]="false" [showRemove]="true"></fast-autocomplete>
+
+    </div>
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'EMPLOYEE.EMAILADDRESS' | translate }}</mat-label>
+            <input type="text" matInput [(ngModel)]="row.emailAddress">
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'EMPLOYEE.GSMNUMBER' | translate }}</mat-label>
+            <input type="text" matInput [(ngModel)]="row.gsmNumber">
+        </mat-form-field>
+      
+    </div>
+    <!--<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">-->
+        <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'EMPLOYEE.PHONENUMBER' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.phoneNumber">
+    </mat-form-field>-->
+        <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'EMPLOYEE.INTEGRATIONCODE' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.integrationCode" >
+    </mat-form-field>-->
+    <!--</div>-->
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-slide-toggle [(ngModel)]="row.isWorking"> </mat-slide-toggle>
+            <span style="margin-left:10px;">{{ 'EMPLOYEE.ISWORKING' | translate }}</span>
+            <textarea matInput style="display:none;"></textarea>
+        </mat-form-field>
+        <mat-form-field [style.width.%]="100" appearance="legacy">
+            <mat-label>{{ 'EMPLOYEE.ENDWORKDATE' | translate }}</mat-label>
+            <input matInput [matDatepicker]="endWorkDatePicker" [(ngModel)]="row.endWorkDate" [disabled]="row.isWorking">
+            <mat-datepicker-toggle matSuffix [for]="endWorkDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #endWorkDatePicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.createdUserText" readonly>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>    
+
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.updatedUserText" readonly>
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+

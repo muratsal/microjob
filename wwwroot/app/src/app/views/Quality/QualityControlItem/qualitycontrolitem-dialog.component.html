@@ -1,0 +1,221 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'QUALITYCONTROLITEM.QUALITYCONTROLITEM' | translate}}  - {{row.qualityControlItemId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'QUALITYCONTROLITEM.QUALITYCONTROLITEM' | translate}} - {{row.qualityControlItemId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="{{'QUALITYCONTROLITEM.QUALITYCONTROLITEM' | translate}}">
+            <div style="margin:20px 10px;">
+
+
+                <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+                    <mat-label>{{ 'QUALITYCONTROLITEM.QUALITYCONTROLID' | translate }}</mat-label>
+                    <input type="number" matInput [(ngModel)]="row.qualityControlId">
+                </mat-form-field>-->
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <div fxLayout="column" [style.width.%]="100" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                        <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+                            <mat-label>{{ 'QUALITYCONTROLITEM.CCOIID' | translate }}</mat-label>
+                            <input type="number" matInput [(ngModel)]="row.ccoiId">
+                        </mat-form-field>-->
+
+                        <fast-autocomplete [style.width.%]="100" placeholder="{{ 'QUALITYCONTROLITEM.CCOIID' | translate }}" [initValue]="row.ccoiId" [endpoint]="'/ComfirmedCustomerOrderItem/GetListForCombo?' +(row.customerId ? 'customerId='+row.customerId : '') " (onChange)="onChange($event,row,'ccoiId')"></fast-autocomplete>
+                        <div fxLayout="row" [style.width.%]="100" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                            <mat-form-field [style.width.%]="100" appearance="legacy">
+                                <mat-label>{{ 'QUALITYCONTROLITEM.REQUIREDQUANTITY' | translate }}</mat-label>
+                                <input type="number" matInput [(ngModel)]="row.requiredQuantity" disabled>
+                            </mat-form-field>
+
+                            <mat-form-field [style.width.%]="100" appearance="legacy">
+                                <mat-label>{{ 'QUALITYCONTROLITEM.CONTROLLEDQUANTITY' | translate }}</mat-label>
+                                <input type="number" matInput [(ngModel)]="row.controlledQuantity">
+                            </mat-form-field>
+
+                            <mat-form-field [style.width.%]="100" appearance="legacy">
+                                <mat-label>{{ 'QUALITYCONTROLITEM.STATUS' | translate }}</mat-label>
+                                <mat-select [(ngModel)]="row.status" (selectionChange)="statusChange($event)" required>
+                                    <mat-option [value]="1">
+                                        {{'QUALITYCONTROLITEM.STATUS_1' | translate}}
+                                    </mat-option>
+                                    <mat-option [value]="2">
+                                        {{'QUALITYCONTROLITEM.STATUS_2' | translate}}
+                                    </mat-option>
+                                    <mat-option [value]="3">
+                                        {{'QUALITYCONTROLITEM.STATUS_3' | translate}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                        <mat-form-field [style.width.%]="100" appearance="legacy">
+                            <mat-label>{{ 'QUALITYCONTROLITEM.DESCRIPTION' | translate }}</mat-label>
+                            <input type="text" matInput [(ngModel)]="row.description">
+                        </mat-form-field>
+
+                    </div>
+
+                    <div [style.width.%]="100" style="text-align:center;">
+                        <mat-card style="min-height:150px; min-width:200px; width:200px;  ">
+                            <img *ngIf="row.productImage" [src]="environment.imagePath + row.productImage" style="height:120px; ">
+                        </mat-card>
+                    </div>
+
+                </div>
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.PRODUCTNAME' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.productName" disabled>
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.PRODUCTDESCRIPTION' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.productDescription" disabled>
+                    </mat-form-field>
+
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.SUPPLIERNAME' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.supplierName" disabled>
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.BRANDNAME' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.brandName" disabled>
+                    </mat-form-field>
+
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.CAPACITYINCBM' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.capacityInCbm" disabled>
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.DEADLINE' | translate }}</mat-label>
+                        <input type="text" matInput value="{{row.deadline | date:'yyyy-MM-dd' }}" disabled>
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.CUSTOMERORDERREFERENCE' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="row.customerOrderReference" disabled>
+                    </mat-form-field>
+
+                    <mat-form-field [style.width.%]="100" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEM.QUANTITY' | translate }}</mat-label>
+                        <input type="text" matInput value="{{row.quantity +' '+ row.unitText}}" disabled>
+                    </mat-form-field>
+
+                </div>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.createdUserText" readonly>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+                        <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="legacy">
+                        <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+                        <input matInput [(ngModel)]="row.updatedUserText" readonly>
+                    </mat-form-field>
+
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="{{'QUALITYCONTROLITEMIMAGE.QUALITYCONTROLITEMIMAGE' | translate}}">
+            <div style="min-height:500px;">
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px" style="margin:25px;">
+                    <input type="file" class="file-input" style="display:none"
+                           (change)="onLoadingImageFileSelected($event)" #fileUpload multiple>
+
+                    <mat-form-field [style.width.%]="80" appearance="legacy">
+                        <mat-label>{{ 'QUALITYCONTROLITEMIMAGE.DESCRIPTION' | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="description">
+                    </mat-form-field>
+
+                    <div [style.width.%]="10" style="text-align:center;">
+                        <button mat-raised-button color="primary" class="upload-btn" style="width:120px;"
+                                (click)="fileUpload.click()">
+                            <mat-icon>attach_file</mat-icon>
+                        </button>
+                    </div>
+
+                    <mat-form-field [style.width.%]="10" appearance="legacy">
+                        <mat-label>{{ 'GENERAL.QUICKFILTER'  | translate }}</mat-label>
+                        <input type="text" matInput [(ngModel)]="qualityControlItemImageQuickFilter" (ngModelChange)="onFilterQualityControlItemImage()">
+                    </mat-form-field>
+                   
+                    
+                </div>
+
+                <div style="padding:10px;">
+                   
+                    <button mat-icon-button color="primary" (click)="downloadQualityImages()" style="margin-left:10px;">
+                        <mat-icon>download</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="qualityImageShowSelectionClick()" style="margin-left:10px;">
+                        <mat-icon>playlist_add</mat-icon>
+                    </button>
+                    <mat-slide-toggle [(ngModel)]="selectAllImages" (change)="selectAllImagesClick()" *ngIf="qualityImageShowSelection" style="margin-left:20px;"> {{'GENERAL.SELECTALL' | translate}}</mat-slide-toggle>
+                    <button mat-button mat-raised-button color="warn" (click)="bulkDeleteQualityControlItemImage()" *ngIf="qualityImageShowSelection" style="margin-left:20px;">{{'GENERAL.DELETE' | translate}}</button>
+
+                </div>
+
+
+                <div fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+                    <mat-card style="height:380px; margin:20px 0px 30px 0px;" *ngFor="let qualityControlItemImage of this.filteredQualityControlItemImageList; index as i">
+                        <p style="width:100%; text-align:center; height:30px;"> {{qualityControlItemImage.description}} </p>
+                        <div style="min-height:240px; margin:0px;">
+                            <img mat-card-image [src]="utilitiesService.getImageThumbnail(environment.imagePath + qualityControlItemImage.imagePath)" alt="loadingImage" style="max-height:240px;">
+                        </div>
+                        <mat-card-actions style="text-align:center;">
+                            <button mat-button (click)="deleteQualityControlItemImage(qualityControlItemImage)" *ngIf="!qualityImageShowSelection">{{'GENERAL.DELETE' | translate}}</button>
+                            <button mat-button (click)="qualityControlItemImageViewDialog(i)" *ngIf="!qualityImageShowSelection">{{'GENERAL.VIEW' | translate}}</button>
+                            <mat-slide-toggle [(ngModel)]="qualityControlItemImage.selected" *ngIf="qualityImageShowSelection"></mat-slide-toggle>
+                        </mat-card-actions>
+                    </mat-card>
+                </div>
+
+            </div>
+
+
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+
+</mat-dialog-actions>

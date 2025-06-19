@@ -1,0 +1,89 @@
+<div class="position-relative" style=" padding-bottom: 0px; margin-bottom:20px; border-bottom: 1px solid #d8d8d8">
+    <h2 mat-dialog-title *ngIf="isNew==true">{{'GENERAL.NEWRECORD' | translate}} {{'INVENTORYTRANSACTION.INVENTORYTRANSACTION' | translate}}  - {{row.inventoryTransId}}</h2>
+    <h2 mat-dialog-title *ngIf="isNew==false">{{'GENERAL.UPDATERECORD' | translate}} {{'INVENTORYTRANSACTION.INVENTORYTRANSACTION' | translate}} - {{row.inventoryTransId}}</h2>
+    <button mat-icon-button color="primary" (click)="close()" class="position-absolute" style="right:0px; top:0px;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'INVENTORYTRANSACTION.INVENTORYID' | translate }}</mat-label>
+        <input type="number" matInput [(ngModel)]="row.inventoryId">
+    </mat-form-field>-->
+    <fast-autocomplete [style.width.%]="100" placeholder="{{ 'INVENTORY.INVENTORY' | translate }}" [initValue]="row.inventoryId" [endpoint]="'/Inventory/GetListForCombo'" (onChange)="onChange($event,row,'inventoryId')" [isRequired]="true"></fast-autocomplete>
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'INVENTORYTRANSACTION.TRANSDATE' | translate }}</mat-label>
+        <input matInput [matDatepicker]="transDatePicker" [(ngModel)]="row.transDate">
+        <mat-datepicker-toggle matSuffix [for]="transDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #transDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <!--<mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'INVENTORYTRANSACTION.EMPLOYEEID' | translate }}</mat-label>
+        <input type="number" matInput [(ngModel)]="row.employeeId">
+    </mat-form-field>-->
+
+    <fast-autocomplete [style.width.%]="100" placeholder="{{ 'INVENTORYTRANSACTION.EMPLOYEENAME' | translate }}" [initValue]="row.employeeId" [endpoint]="'/Employee/GetListForCombo'" (onChange)="onChange($event,row,'employeeId')" [isRequired]="false"></fast-autocomplete>
+
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'INVENTORYTRANSACTION.TRANSTYPE' | translate }}</mat-label>
+        <!--<input type="number" matInput [(ngModel)]="row.transType">-->
+        <mat-select [(ngModel)]="row.transType" required>
+            <mat-option [value]="1">
+                {{ 'INVENTORYTRANSACTION.TRANSTYPE_1' | translate }}
+            </mat-option>
+            <mat-option [value]="2">
+                {{ 'INVENTORYTRANSACTION.TRANSTYPE_2' | translate }}
+            </mat-option>
+            <mat-option [value]="3">
+                {{ 'INVENTORYTRANSACTION.TRANSTYPE_3' | translate }}
+            </mat-option>
+            <mat-option [value]="4">
+                {{ 'INVENTORYTRANSACTION.TRANSTYPE_4' | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field [style.width.%]="100" appearance="legacy">
+        <mat-label>{{ 'INVENTORYTRANSACTION.NOTE' | translate }}</mat-label>
+        <input type="text" matInput [(ngModel)]="row.note">
+    </mat-form-field>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.createdDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.CREATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.createdUserText" readonly>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="isNew!=true" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px">
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDDATE' | translate }}</mat-label>
+            <input matInput value="{{row.updatedDate | date:'yyyy-MM-dd HH:mm' }}" readonly>
+        </mat-form-field>
+
+        <mat-form-field fxFlex appearance="legacy">
+            <mat-label>{{ 'USER.UPDATEDUSERTEXT' | translate }}</mat-label>
+            <input matInput [(ngModel)]="row.updatedUserText" readonly>
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row">
+    <div fxFlex="20%">
+        <button *ngIf="isNew==false" mat-raised-button color="warn" (click)="delete()">{{'GENERAL.DELETE' | translate}}</button>
+    </div>
+    <div fxFlex="80%" style="text-align:right;">
+        <button mat-raised-button (click)="close()">{{'GENERAL.CANCEL' | translate}}</button>
+        <button mat-raised-button color="primary" (click)="save()">{{'GENERAL.SAVE' | translate}}</button>
+    </div>
+</mat-dialog-actions>
+
+
